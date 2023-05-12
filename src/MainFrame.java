@@ -33,7 +33,7 @@ import javax.swing.UIManager;
 
 public class MainFrame {
     private JFrame frame;
-    private static final String DIR_PATH = "C:\\Users\\chewb\\Documents\\Studia\\sem4\\laborki\\Zpo\\1\\files";
+    private static final String DIR_PATH = "Text";
     private final int liczbaWyrazowStatystyki;
     private final AtomicBoolean fajrant;
     private final int liczbaProducentow;
@@ -143,15 +143,12 @@ public class MainFrame {
                         Files.walkFileTree(lookPath, new SimpleFileVisitor<>() {
                             @Override
                             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                                //distinct by file extension
                                 if (file.toString().endsWith(".txt")) {
                                     Optional<Path> filePath = Optional.of(file.toRealPath());
-                                    //put into queue
                                     try {
                                         kolejka.put(filePath);
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
-                                        //Thread.currentThread().interrupt();
                                     }
                                 }
                                 return FileVisitResult.CONTINUE;
@@ -185,19 +182,15 @@ public class MainFrame {
 
             while (!Thread.currentThread().isInterrupted()) {
                 try {
-                    // TODO pobieranie ścieżki i tworzenie statystyki wyrazów
-                    // lub oczekiwanie jeśli kolejka jest pusta
                     Optional<Path> filePath = kolejka.take();
                     if (filePath.isPresent()) {
-                        //  wyświetlanie statystyk
                         try {
-                            System.out.println(getLinkedCountedWords(filePath.get(), 15));
+                            System.out.println(getLinkedCountedWords(filePath.get(), 20));
 
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     } else {
-                        //give the consumer posion pills
                         break;
                     }
                 } catch (InterruptedException e) {
